@@ -105,3 +105,67 @@ def parse_transactions(raw_lines):
         })
 
     return cleaned_transactions
+
+# Task 1.3: Validate and filter transactions
+
+def validate_and_filter(transactions, region=None, min_amount=None, max_amount=None):
+    valid_transactions = []
+    invalid_count = 0
+
+    for tx in transactions:
+
+        # Validation rules
+        if not tx["TransactionID"].startswith("T"):
+            invalid_count += 1
+            continue
+
+        if not tx["ProductID"].startswith("P"):
+            invalid_count += 1
+            continue
+
+        if not tx["CustomerID"].startswith("C"):
+            invalid_count += 1
+            continue
+
+        if tx["Quantity"] <= 0 or tx["UnitPrice"] <= 0:
+            invalid_count += 1
+            continue
+
+        valid_transactions.append(tx)
+
+    # Filtering
+    filtered_transactions = valid_transactions
+
+    if region:
+        filtered_transactions = [
+            tx for tx in filtered_transactions if tx["Region"] == region
+        ]
+
+    if min_amount:
+        filtered_transactions = [
+            tx for tx in filtered_transactions
+            if tx["Quantity"] * tx["UnitPrice"] >= min_amount
+        ]
+
+    if max_amount:
+        filtered_transactions = [
+            tx for tx in filtered_transactions
+            if tx["Quantity"] * tx["UnitPrice"] <= max_amount
+        ]
+
+    summary = {
+        "total_input": len(transactions),
+        "invalid": invalid_count,
+        "final_count": len(filtered_transactions)
+    }
+
+    # Required prints
+    print("Available regions:", list(set(tx["Region"] for tx in valid_transactions)))
+
+    if valid_transactions:
+        amounts = [tx["Quantity"] * tx["UnitPrice"] for tx in valid_transactions]
+        print("Transaction amount range:", min(amounts), "-", max(amounts))
+
+    print("Final valid transactions:", len(filtered_transactions))
+
+    return filtered_transactions, invalid_count, summary
