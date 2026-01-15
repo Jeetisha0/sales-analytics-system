@@ -19,13 +19,15 @@ def main():
 if __name__ == "__main__":
     main()
 
+
 from utils.file_handler import read_sales_file
 from utils.data_processor import parse_transactions, validate_and_filter
 
-raw = read_sales_file("data/sales_data.txt")
-parsed = parse_transactions(raw)
+def main():
+    raw_lines = read_sales_file("data/sales_data.txt")
+    parsed_data = parse_transactions(raw_lines)
+    validate_and_filter(parsed_data)
 
-valid, invalid_count, summary = validate_and_filter(parsed)
-
-print(summary)
+if __name__ == "__main__":
+    main()
 
