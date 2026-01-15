@@ -94,78 +94,39 @@ def parse_transactions(raw_lines):
             continue
 
         cleaned_transactions.append({
-            "TransactionID": transaction_id,
-            "Date": date,
-            "ProductID": product_id,
-            "ProductName": product_name,
-            "Quantity": quantity,
-            "UnitPrice": unit_price,
-            "CustomerID": customer_id,
-            "Region": region
-        })
+    "transaction_id": transaction_id,
+    "date": date,
+    "product_id": product_id,
+    "product_name": product_name,
+    "quantity": quantity,
+    "price": unit_price,
+    "customer_id": customer_id,
+    "region": region
+})
 
     return cleaned_transactions
 
 # Task 1.3: Validate and filter transactions
-
-def validate_and_filter(transactions, region=None, min_amount=None, max_amount=None):
+def validate_and_filter(transactions):
     valid_transactions = []
-    invalid_count = 0
 
-    for tx in transactions:
+    for txn in transactions:
+        if (
+            txn["quantity"] > 0
+            and txn["price"] > 0
+            and txn["region"].strip() != ""
+        ):
+            valid_transactions.append(txn)
 
-        # Validation rules
-        if not tx["TransactionID"].startswith("T"):
-            invalid_count += 1
-            continue
+    return valid_transactions
 
-        if not tx["ProductID"].startswith("P"):
-            invalid_count += 1
-            continue
 
-        if not tx["CustomerID"].startswith("C"):
-            invalid_count += 1
-            continue
+# Task 2.1: Sales Summary Calculator
+# (a): Calculate total revenue
+def calculate_total_revenue(transactions):
+    total_revenue = 0
 
-        if tx["Quantity"] <= 0 or tx["UnitPrice"] <= 0:
-            invalid_count += 1
-            continue
+    for txn in transactions:
+        total_revenue += txn["quantity"] * txn["price"]
 
-        valid_transactions.append(tx)
-
-    # Filtering
-    filtered_transactions = valid_transactions
-
-    if region:
-        filtered_transactions = [
-            tx for tx in filtered_transactions if tx["Region"] == region
-        ]
-
-    if min_amount:
-        filtered_transactions = [
-            tx for tx in filtered_transactions
-            if tx["Quantity"] * tx["UnitPrice"] >= min_amount
-        ]
-
-    if max_amount:
-        filtered_transactions = [
-            tx for tx in filtered_transactions
-            if tx["Quantity"] * tx["UnitPrice"] <= max_amount
-        ]
-
-    summary = {
-        "total_input": len(transactions),
-        "invalid": invalid_count,
-        "final_count": len(filtered_transactions)
-    }
-
-    # Required prints
-    print("Available regions:", list(set(tx["Region"] for tx in valid_transactions)))
-
-    if valid_transactions:
-        amounts = [tx["Quantity"] * tx["UnitPrice"] for tx in valid_transactions]
-        print("Transaction amount range:", min(amounts), "-", max(amounts))
-
-    print("Final valid transactions:", len(filtered_transactions))
-
-    return filtered_transactions, invalid_count, summary
+    return total_revenue

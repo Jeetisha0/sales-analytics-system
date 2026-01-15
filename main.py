@@ -2,32 +2,27 @@
 # Entry point for Sales Analytics System
 
 from utils.file_handler import read_sales_file
-from utils.data_processor import process_sales_data
+from utils.data_processor import (
+    parse_transactions,
+    validate_and_filter,
+    calculate_total_revenue
+)
 
 def main():
-    file_path = "data/sales_data.txt"
-
-    # Step 1: Read file
-    raw_lines = read_sales_file(file_path)
-
-    # Step 2: Clean and validate data
-    cleaned_data = process_sales_data(raw_lines)
-
-    # Just confirmation message
-    print("Data cleaning and validation completed.")
-
-if __name__ == "__main__":
-    main()
-
-
-from utils.file_handler import read_sales_file
-from utils.data_processor import parse_transactions, validate_and_filter
-
-def main():
+    # Task 1.1: Read raw sales data
     raw_lines = read_sales_file("data/sales_data.txt")
-    parsed_data = parse_transactions(raw_lines)
-    validate_and_filter(parsed_data)
+
+    # Task 1.2: Parse and clean transactions
+    parsed_transactions = parse_transactions(raw_lines)
+
+    # Task 1.3: Validate transactions
+    valid_transactions = validate_and_filter(parsed_transactions)
+
+    # Task 2.1 (a): Total revenue
+    total_revenue = calculate_total_revenue(valid_transactions)
+
+    # Output for validation
+    print(total_revenue)
 
 if __name__ == "__main__":
     main()
-
