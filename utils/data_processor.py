@@ -257,3 +257,106 @@ def customer_analysis(transactions):
     )
 
     return sorted_result
+
+# Task 2.2 (a): Daily sales trend
+def daily_sales_trend(transactions):
+    """
+    Analyzes sales trends by date
+    """
+
+    daily_data = {}
+
+    # Group by date
+    for txn in transactions:
+        date = txn["date"]
+        revenue = txn["quantity"] * txn["price"]
+        customer = txn["customer_id"]
+
+        if date not in daily_data:
+            daily_data[date] = {
+                "revenue": 0,
+                "transaction_count": 0,
+                "customers": set()
+            }
+
+        daily_data[date]["revenue"] += revenue
+        daily_data[date]["transaction_count"] += 1
+        daily_data[date]["customers"].add(customer)
+
+    # Prepare final output
+    result = {}
+    for date in daily_data:
+        result[date] = {
+            "revenue": round(daily_data[date]["revenue"], 2),
+            "transaction_count": daily_data[date]["transaction_count"],
+            "unique_customers": len(daily_data[date]["customers"])
+        }
+
+    # Sort chronologically by date
+    sorted_result = dict(sorted(result.items()))
+
+    return sorted_result
+
+# Task 2.2 (b): Peak sales day
+def peak_sales_day(transactions):
+    """
+    Identifies the day with the highest total revenue
+    """
+
+    daily_revenue = {}
+
+    # Aggregate revenue by date
+    for txn in transactions:
+        date = txn["date"]
+        revenue = txn["quantity"] * txn["price"]
+
+        if date not in daily_revenue:
+            daily_revenue[date] = 0
+
+        daily_revenue[date] += revenue
+
+    # Find peak sales day
+    peak_day = max(daily_revenue, key=daily_revenue.get)
+
+    return {
+        "date": peak_day,
+        "revenue": round(daily_revenue[peak_day], 2)
+    }
+
+
+# Task 2.3: Low performing products
+def low_performing_products(transactions, threshold=10):
+    """
+    Identifies products with low sales
+    """
+
+    product_summary = {}
+
+    # Aggregate quantity and revenue by product
+    for txn in transactions:
+        product = txn["product_name"]
+        quantity = txn["quantity"]
+        revenue = txn["quantity"] * txn["price"]
+
+        if product not in product_summary:
+            product_summary[product] = {
+                "total_quantity": 0,
+                "total_revenue": 0.0
+            }
+
+        product_summary[product]["total_quantity"] += quantity
+        product_summary[product]["total_revenue"] += revenue
+
+    # Filter products below threshold
+    low_products = []
+
+    for product, data in product_summary.items():
+        if data["total_quantity"] < threshold:
+            low_products.append(
+                (product, data["total_quantity"], round(data["total_revenue"], 2))
+            )
+
+    # Sort by total quantity ascending
+    low_products.sort(key=lambda x: x[1])
+
+    return low_products

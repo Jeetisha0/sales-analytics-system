@@ -7,7 +7,8 @@ from utils.data_processor import (
     validate_and_filter,
     calculate_total_revenue,
     region_wise_sales, top_selling_products,
-    customer_analysis
+    customer_analysis, daily_sales_trend,
+    peak_sales_day, low_performing_products
 )
 
 def main():
@@ -23,20 +24,32 @@ def main():
     # Task 2.1 (a): Total revenue
     total_revenue = calculate_total_revenue(valid_transactions)
 
-    # Output for validation
-    print(total_revenue)
 
     # Task 2.1 (b): Region-wise sales analysis
     region_stats = region_wise_sales(valid_transactions)
-    print(region_stats)
+    
     
     # Task 2.1 (c): Top selling products
     top_products = top_selling_products(valid_transactions)
-    print(top_products)
+    
     
     # Task 2.1 (d): Customer purchase analysis
     customer_stats = customer_analysis(valid_transactions)
-    print(customer_stats)
+   
+
+   # Task 2.2 (a): Daily sales trend
+    daily_trend = daily_sales_trend(valid_transactions)
+    
+
+    # Task 2.2 (b): Peak sales day
+    peak_day = peak_sales_day(valid_transactions)
+    
+    # Task 2.3: Low performing products
+    low_products = low_performing_products(valid_transactions)
+    print(low_products)
+
+ 
+ 
 
 
 if __name__ == "__main__":
