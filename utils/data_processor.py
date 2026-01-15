@@ -65,3 +65,43 @@ def process_sales_data(raw_lines):
     print(f"Valid records after cleaning: {len(valid_records)}")
 
     return valid_records
+
+# Task 1.2: Parse and clean transactions
+
+def parse_transactions(raw_lines):
+    cleaned_transactions = []
+
+    for line in raw_lines:
+        parts = line.split("|")
+
+        # Skip rows with incorrect number of fields
+        if len(parts) != 8:
+            continue
+
+        transaction_id = parts[0]
+        date = parts[1]
+        product_id = parts[2]
+        product_name = parts[3].replace(",", "").strip()
+        quantity = parts[4].replace(",", "")
+        unit_price = parts[5].replace(",", "")
+        customer_id = parts[6]
+        region = parts[7]
+
+        try:
+            quantity = int(quantity)
+            unit_price = float(unit_price)
+        except:
+            continue
+
+        cleaned_transactions.append({
+            "TransactionID": transaction_id,
+            "Date": date,
+            "ProductID": product_id,
+            "ProductName": product_name,
+            "Quantity": quantity,
+            "UnitPrice": unit_price,
+            "CustomerID": customer_id,
+            "Region": region
+        })
+
+    return cleaned_transactions
