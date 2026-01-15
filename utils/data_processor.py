@@ -130,3 +130,130 @@ def calculate_total_revenue(transactions):
         total_revenue += txn["quantity"] * txn["price"]
 
     return total_revenue
+
+# (b): Region-wise sales analysis
+def region_wise_sales(transactions):
+    """
+    Analyzes sales by region
+    """
+
+    region_data = {}
+    overall_sales = 0
+
+    # Calculate total sales and transaction count per region
+    for txn in transactions:
+        region = txn["region"]
+        sale_amount = txn["quantity"] * txn["price"]
+
+        overall_sales += sale_amount
+
+        if region not in region_data:
+            region_data[region] = {
+                "total_sales": 0,
+                "transaction_count": 0
+            }
+
+        region_data[region]["total_sales"] += sale_amount
+        region_data[region]["transaction_count"] += 1
+
+    # Calculate percentage contribution
+    for region in region_data:
+        region_data[region]["percentage"] = round(
+            (region_data[region]["total_sales"] / overall_sales) * 100, 2
+        )
+
+    # Sort by total_sales (descending)
+    sorted_region_data = dict(
+        sorted(
+            region_data.items(),
+            key=lambda item: item[1]["total_sales"],
+            reverse=True
+        )
+    )
+
+    return sorted_region_data
+
+# (c): Top selling products
+def top_selling_products(transactions, n=5):
+    """
+    Finds top n products by total quantity sold
+    """
+
+    product_data = {}
+
+    # Aggregate quantity and revenue by product_name
+    for txn in transactions:
+        product = txn["product_name"]
+        quantity = txn["quantity"]
+        revenue = txn["quantity"] * txn["price"]
+
+        if product not in product_data:
+            product_data[product] = {
+                "total_quantity": 0,
+                "total_revenue": 0
+            }
+
+        product_data[product]["total_quantity"] += quantity
+        product_data[product]["total_revenue"] += revenue
+
+    # Convert to list of tuples
+    result = []
+    for product, values in product_data.items():
+        result.append(
+            (product, values["total_quantity"], values["total_revenue"])
+        )
+
+    # Sort by total quantity sold (descending)
+    result.sort(key=lambda x: x[1], reverse=True)
+
+    # Return top n products
+    return result[:n]
+
+# (d): Customer purchase analysis
+def customer_analysis(transactions):
+    """
+    Analyzes customer purchase patterns
+    """
+
+    customer_data = {}
+
+    # Aggregate data per customer
+    for txn in transactions:
+        customer = txn["customer_id"]
+        product = txn["product_name"]
+        amount = txn["quantity"] * txn["price"]
+
+        if customer not in customer_data:
+            customer_data[customer] = {
+                "total_spent": 0,
+                "purchase_count": 0,
+                "products_bought": set()
+            }
+
+        customer_data[customer]["total_spent"] += amount
+        customer_data[customer]["purchase_count"] += 1
+        customer_data[customer]["products_bought"].add(product)
+
+    # Calculate average order value and format output
+    result = {}
+
+    for customer, data in customer_data.items():
+        avg_order_value = data["total_spent"] / data["purchase_count"]
+
+        result[customer] = {
+            "total_spent": round(data["total_spent"], 2),
+            "purchase_count": data["purchase_count"],
+            "avg_order_value": round(avg_order_value, 2),
+            "products_bought": list(data["products_bought"])
+        }
+
+    # Sort by total_spent (descending)
+    sorted_result = dict(
+        sorted(
+            result.items(),
+            key=lambda item: item[1]["total_spent"],
+            reverse=True
+        )
+    )
+
+    return sorted_result

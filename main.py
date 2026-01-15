@@ -5,7 +5,9 @@ from utils.file_handler import read_sales_file
 from utils.data_processor import (
     parse_transactions,
     validate_and_filter,
-    calculate_total_revenue
+    calculate_total_revenue,
+    region_wise_sales, top_selling_products,
+    customer_analysis
 )
 
 def main():
@@ -24,5 +26,19 @@ def main():
     # Output for validation
     print(total_revenue)
 
+    # Task 2.1 (b): Region-wise sales analysis
+    region_stats = region_wise_sales(valid_transactions)
+    print(region_stats)
+    
+    # Task 2.1 (c): Top selling products
+    top_products = top_selling_products(valid_transactions)
+    print(top_products)
+    
+    # Task 2.1 (d): Customer purchase analysis
+    customer_stats = customer_analysis(valid_transactions)
+    print(customer_stats)
+
+
 if __name__ == "__main__":
     main()
+
