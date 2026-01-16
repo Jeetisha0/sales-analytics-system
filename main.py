@@ -102,7 +102,9 @@ def main():
     # Save enriched data to file
     save_enriched_data(enriched_data)
 
-    print(enriched_data[0])
+# Task 4.1: Generates a comprehensive text report
+    from utils.data_processor import generate_sales_report
+    generate_sales_report(transactions, enriched_data)
 
 
 if __name__ == "__main__":

@@ -360,3 +360,23 @@ def low_performing_products(transactions, threshold=10):
     low_products.sort(key=lambda x: x[1])
 
     return low_products
+
+# Task 4.1: Generates a comprehensive text report
+import os
+from datetime import datetime
+from collections import defaultdict
+
+def generate_sales_report(transactions, enriched_transactions, output_file='output/sales_report.txt'):
+
+    # Ensure output directory exists
+    os.makedirs(os.path.dirname(output_file), exist_ok=True)
+
+    with open(output_file, "w", encoding="utf-8") as report:
+
+        # 1. HEADER
+        
+        report.write("=" * 44 + "\n")
+        report.write("           SALES ANALYTICS REPORT\n")
+        report.write(f"     Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+        report.write(f"     Records Processed: {len(transactions)}\n")
+        report.write("=" * 44 + "\n\n")
