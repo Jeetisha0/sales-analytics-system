@@ -48,10 +48,68 @@ def main():
     low_products = low_performing_products(valid_transactions)
     print(low_products)
 
+
+    #Task 3.1: Fetch product details
+    
+    from utils.api_handler import fetch_all_products, create_product_mapping, enrich_sales_data 
+
+    def main():
+    # (a): Fetch products
+     products = fetch_all_products()
+
+    # (b): Create mapping
+     product_mapping = create_product_mapping(products)
+
+# Task 3.2: Enrich Sales Data
+     # Step 1: Read sales data from file
+     transactions = read_sales_file("data/sales_data.txt")
+
+     # Step 2: Fetch products from API
+     products = fetch_all_products()
+
+     # Step 3: Create product mapping
+     product_mapping = create_product_mapping(products)
+
+     # Step 4: Enrich sales data
+     enriched_data = enrich_sales_data(transactions, product_mapping)
+
  
- 
+# TASK 3
+
+from utils.api_handler import (
+    fetch_all_products,
+    create_product_mapping,
+    enrich_sales_data,
+    save_enriched_data
+)
+
+def main():
+    
+    # Task 3.1: Fetch Product Details
+    # (a) Fetch products from API
+    products = fetch_all_products()
+
+    # (b) Create product mapping
+    product_mapping = create_product_mapping(products)
+
+    # Task 3.2: Enrich Sales Data
+    # Read sales data from file
+    transactions = read_sales_file("data/sales_data.txt")
+
+    # Enrich sales data using API mapping
+    enriched_data = enrich_sales_data(transactions, product_mapping)
+
+    # Save enriched data to file
+    save_enriched_data(enriched_data)
+
+    print(enriched_data[0])
 
 
 if __name__ == "__main__":
     main()
+    
+
+
+
+ 
 
