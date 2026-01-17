@@ -67,50 +67,39 @@ def create_product_mapping(api_products):
 # Task 3.2: Enrich Sales Data
 
 def enrich_sales_data(transactions, product_mapping):
+    """
+    Task 3.2
+    Enriches cleaned transaction dictionaries with API product information.
+    """
 
     enriched_transactions = []
 
-    # Process each transaction line
-    for line in transactions:
-        # Split transaction fields
-        fields = line.split("|")
-
-        # Create base transaction dictionary
-        transaction = {
-            "TransactionID": fields[0],
-            "Date": fields[1],
-            "ProductID": fields[2],
-            "ProductName": fields[3],
-            "Quantity": fields[4],
-            "UnitPrice": fields[5],
-            "CustomerID": fields[6],
-            "Region": fields[7]
-        }
+    for txn in transactions:
+        # Copy original transaction
+        enriched_txn = txn.copy()
 
         # Extract numeric product ID (P101 -> 101)
         try:
-            numeric_id = int("".join(filter(str.isdigit, transaction["ProductID"])))
+            numeric_id = int("".join(filter(str.isdigit, txn["product_id"])))
         except ValueError:
             numeric_id = None
 
-        # Check if product exists in API mapping
         api_product = product_mapping.get(numeric_id)
 
         if api_product:
-            transaction["API_Category"] = api_product.get("category")
-            transaction["API_Brand"] = api_product.get("brand")
-            transaction["API_Rating"] = api_product.get("rating")
-            transaction["API_Match"] = True
+            enriched_txn["API_Category"] = api_product.get("category")
+            enriched_txn["API_Brand"] = api_product.get("brand")
+            enriched_txn["API_Rating"] = api_product.get("rating")
+            enriched_txn["API_Match"] = True
         else:
-            transaction["API_Category"] = None
-            transaction["API_Brand"] = None
-            transaction["API_Rating"] = None
-            transaction["API_Match"] = False
+            enriched_txn["API_Category"] = None
+            enriched_txn["API_Brand"] = None
+            enriched_txn["API_Rating"] = None
+            enriched_txn["API_Match"] = False
 
-        enriched_transactions.append(transaction)
+        enriched_transactions.append(enriched_txn)
 
     return enriched_transactions
-
 
 # Task 3.2: Part-2
 import os
